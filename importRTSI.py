@@ -123,16 +123,50 @@ def getindex(PRICE):
     return I
 
 
- # Построение графиков
+# Перемножает списки (перенести)
+def prodlist(x,y):
+    n=len(x)
+    p=list()
+    for k in range(n):
+        p.append(x[k]*y[k])
+    return p
+
+
+# Вычисление коэффициентов линейной регрессии
+def linMMQ(x,y):
+    n=len(x)
+    a = (n*sum(prodlist(x,y))-sum(x)*sum(y))/(n*sum(prodlist(x,x))-(sum(x))**2)
+    b = (sum(y)-a*sum(x))/n
+    return [a, b]
+
+# Вычисление значений линии регрессии
+def linspace(x,a,b):
+    n=len(x)
+    y=list()
+    for k in range(n):
+        y.append(a*x[k]+b)
+    return y
+
+
+X=list(range(1,L+1))
+Y=getindex(PRICE)
+[a, b]=linMMQ(X,Y)
+
+# Построение графиков
 
 plt.figure(figsize=(9, 9))
 plt.subplot(2, 1, 1)
-plt.plot(list(range(1,L+1)), getindex(PRICE))
+plt.plot(X, Y)
+plt.plot(X, linspace(X,a,b))
 plt.title("Индекс RTSI за 2019 год по дням и месяцам")
 plt.xlabel("Дни")
 plt.grid()
 plt.subplot(2, 1, 2)
-plt.plot(list(range(1,13)), getindex(PRICE1))
+X=list(range(1,13))
+Y=getindex(PRICE1)
+[a, b]=linMMQ(X,Y)
+plt.plot(X, Y)
+plt.plot(X, linspace(X,a,b))
 plt.xlabel("Месяцы")
 plt.grid()
 plt.show()
